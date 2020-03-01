@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        .field-wrapper {
+            margin-bottom: 10px;
+        }
+    </style>
+    <title></title>
+    <meta name="author" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="css/normalize.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div style="margin: 10px auto">
+        <div class="col-md-3 field-wrapper">
+            <input class="form-control" placeholder="Insert Url Here" id="urlField" type="text">
+        </div>
+        <div class="col-md-3 field-wrapper">
+            <input required class="form-control" placeholder="Insert Interval Gap Time in minutes" id="intervalGapTime" type="number">
+        </div>
+        <div class="col-md-3 field-wrapper">
+            <input required class="form-control" placeholder="Stop Process After..." id="stopProcessTime" type="number">
+        </div>
+        <div class="col-md-3 field-wrapper">
+            <button class="btn btn-primary" id="start">start</button>
+            <button class="btn btn-danger" id="stop">stop</button>
+        </div>
+        <div id="content">
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        var interval;
+        var intervalGapTime;
+        var urlValue;
+        var stopProcessTime;
+        const minuteInMiliseconds = 60000;
+        var counter = 0;
+    
+
+        $('#start').click(() => {
+            intervalGapTime = $('#intervalGapTime').val();
+            if (intervalGapTime === "" ||
+                parseInt(intervalGapTime) <= 0 ||
+                 parseInt(intervalGapTime) === NaN) {
+                return;
+            }
+            $('#start').attr('disabled', true);
+            $("#content").append('<h3 id="contenText">working...<h3>');
+            urlValue = $('#urlField').val();
+            stopProcessTime = $('#stopProcessTime').val();
+            numIntervals =  (stopProcessTime*60)/intervalGapTime;
+            var winstart = window.open(urlValue, '_blank');
+            interval = setInterval(startOpenUrl, intervalGapTime * minuteInMiliseconds);
+        });
+
+        $('#stop').click(() => {
+            $("#contenText").remove();
+            $('#start').attr('disabled', false);
+            clearInterval(interval)
+        });
+
+        function startOpenUrl() {
+            counter++;
+            if (counter >= numIntervals) {
+                clearInterval(interval)
+            }
+            var winloop = window.open(urlValue, '_blank');
+        } 
+    </script>
+</body>
+
+</html>
